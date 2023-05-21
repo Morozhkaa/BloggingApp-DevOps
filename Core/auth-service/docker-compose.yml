@@ -1,0 +1,104 @@
+version: "v2.12.2"
+
+networks:
+  myapp:
+    external: true
+
+services:
+  auth:
+    image: auth:1
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 3030:3030
+    environment:
+      - HTTP_PORT=3030
+      - IS_PROD=false
+      - SALT=b9PDPbt4
+      - SECRET=secret
+      - DB_URL=postgres://postgres:qwerty@auth-db:5432/auth?sslmode=disable
+    depends_on:
+      - auth-db
+    networks:
+      - myapp
+
+  auth-db:
+    image: postgres:15.1
+    volumes:
+      - ./internal/adapters/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=qwerty
+    networks:
+      - myapp
+
+  chat:
+    image: chat:1
+    build:
+      context: ../chat-service
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    networks:
+      - myapp
+  post:
+    image: post:1
+    build:
+      context: ../post-service
+      dockerfile: Dockerfile
+    ports:
+      - 9000:9000
+    environment:
+      - DB_URL=postgres://postgres:qwerty@post-db:5432/post?sslmode=disable
+      - HTTP_PORT=9000
+      - AUTH_URL=http://auth:3030/
+      - IS_PROD=false
+    depends_on:
+      - post-db
+    networks:
+      - myapp
+
+  post-db:
+    image: postgres:15.1
+    volumes:
+      - ./internal/adapters/db/db-post/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - 5431:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=qwerty
+    networks:
+      - myapp
+
+  comment:
+    image: comment:1
+    build:
+      context: ../comms-service
+      dockerfile: Dockerfile
+    ports:
+      - 9090:9090
+    environment:
+      - DB_URL=postgres://postgres:qwerty@post-db:5432/post?sslmode=disable
+      - HTTP_PORT=9090
+      - AUTH_URL=http://auth:3030/
+      - IS_PROD=false
+    depends_on:
+      - post-db
+    networks:
+      - myapp
+  
+  frontend:
+    image: frontend:1
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+    ports:
+      - '3000:3000'
+    environment:
+      - REACT_APP_authURL=http://localhost:3030/
+      - REACT_APP_postURL=http://localhost:9000/api/post-service/v1/
+      - REACT_APP_commentURL=http://localhost:9090/api/comms-service/v1/
+      - REACT_APP_chatURL=ws://localhost:8080/api/chat-service/v1/chat
