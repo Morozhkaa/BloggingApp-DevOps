@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-deployment
+  namespace: hse-app
+  labels:
+    app: {{ .Release.Name }}
+spec:
+  replicas: {{ .Values.container_replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+    spec:
+      containers:
+      - name: {{ .Release.Name }}
+        image: {{ .Values.container_image }}
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: {{ .Values.container_port }}

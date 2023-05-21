@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-deployment
+  labels:
+    app: auth
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth
+  template:
+    metadata:
+      labels:
+        app: auth
+    spec:
+      containers:
+      - name: auth
+        image: registry.gitlab.com/teta-students/hse_shishkina/core/auth-service:${IMAGE_VERSION}
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 3030
+        env:
+        - name: SALT
+          valueFrom:
+            secretKeyRef:
+              name: auth-secret
+              key: salt
+        - name: SECRET
+          valueFrom:
+            secretKeyRef:
+              name: auth-secret
+              key: secret
+        - name: IS_PROD
+          valueFrom:
+            configMapKeyRef:
+              name: auth-configmap
+              key: is_prod
+        - name: DB_URL
+          valueFrom:
+            configMapKeyRef:
+              name: auth-configmap
+              key: db_url
+        - name: HTTP_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: auth-configmap
+              key: http_port
+      imagePullSecrets: 
+      - name: auth-gitlab-pull-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-service
+spec:
+  selector:
+    app: auth
+  ports:
+    - protocol: TCP
+      port: 3030
+      targetPort: 3030

@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: comment-deployment
+  labels:
+    app: comment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: comment
+  template:
+    metadata:
+      labels:
+        app: comment
+    spec:
+      containers:
+      - name: comment
+        image: registry.gitlab.com/teta-students/hse_shishkina/core/comms-service:${IMAGE_VERSION}
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 9090
+        env:
+        - name: HTTP_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: comment-configmap
+              key: http_port
+        - name: IS_PROD
+          valueFrom:
+            configMapKeyRef:
+              name: comment-configmap
+              key: is_prod
+        - name: DB_URL
+          valueFrom:
+            configMapKeyRef:
+              name: comment-configmap
+              key: db_url
+        - name: AUTH_URL
+          valueFrom:
+            configMapKeyRef:
+              name: comment-configmap
+              key: auth_url
+      imagePullSecrets: 
+      - name: comment-gitlab-pull-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: comment-service
+spec:
+  selector:
+    app: comment
+  ports:
+    - protocol: TCP
+      port: 9090
+      targetPort: 9090

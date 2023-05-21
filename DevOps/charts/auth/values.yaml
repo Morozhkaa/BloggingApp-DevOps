@@ -1,0 +1,14 @@
+container_port: "3030"
+container_replicaCount: 1
+container_image: auth:1
+container_env:
+  - name: SALT
+    value: b9PDPbt4
+  - name: SECRET
+    value: secret
+  - name: DB_URL
+    value: postgres://postgres:qwerty@auth-db-service:5432/auth?sslmode=disable
+  # - name: IS_PROD
+  #   value: "false"
+  # - name: HTTP_PORT
+  #   value: "3030"

@@ -1,0 +1,12 @@
+container_port: "3000"
+container_replicaCount: 1
+container_image: frontend:1
+container_env:
+  - name: REACT_APP_authURL
+    value: https://myapp.com/
+  - name: REACT_APP_postURL
+    value: https://myapp.com/api/post-service/v1/
+  - name: REACT_APP_commentURL
+    value: https://myapp.com/api/comms-service/v1/
+  - name: REACT_APP_chatURL
+    value: ws://myapp.com/api/chat-service/v1/chat

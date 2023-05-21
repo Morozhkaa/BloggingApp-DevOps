@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: auth-configmap
+data:
+  is_prod: "false"
+  #db_url: postgres://postgres:qwerty@auth-db-service:5432/auth?sslmode=disable
+  #db_url: postgres://oshishkina:iohs3o94fFhopR-954@91.185.86.92:5432/auth?sslmode=disable
+  db_url: postgres://${DB_USER}:${DB_PASS}@${DB_HOST}:${DB_PORT}/auth?sslmode=disable
+  http_port: "3030"

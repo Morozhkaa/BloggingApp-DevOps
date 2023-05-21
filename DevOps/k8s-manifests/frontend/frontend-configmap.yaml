@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: frontend-configmap
+data:
+  # authURL: https://myapp.com/
+  # postURL: https://myapp.com/api/post-service/v1/
+  # commentURL: https://myapp.com/api/comms-service/v1/
+  # chatURL: ws://myapp.com/api/chat-service/v1/chat
+  authURL: http://sakurablog.ru/
+  postURL: http://sakurablog.ru/api/post-service/v1/
+  commentURL: http://sakurablog.ru/api/comms-service/v1/
+  chatURL: ws://sakurablog.ru/api/chat-service/v1/chat

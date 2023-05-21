@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: post-db-deployment
+  labels:
+    app: postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:15.1
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: post-db-secret
+              key: postgres_user
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: post-db-secret
+              key: postgres_password
+        - name: POSTGRES_DB
+          valueFrom:
+            configMapKeyRef:
+              name: post-db-configmap
+              key: postgres_db
+        - name: POSTGRES_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: post-db-configmap
+              key: postgres_host
+        - name: POSTGRES_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: post-db-configmap
+              key: postgres_port
+        volumeMounts:
+        - name: post-initdb
+          mountPath: /docker-entrypoint-initdb.d/
+      volumes:
+      - name: post-initdb
+        configMap:
+          name: post-db-vol
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: post-db-service
+spec:
+  selector:
+    app: postgres
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432

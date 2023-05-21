@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: auth-db-configmap
+data:
+  postgres_db: auth
+  postgres_host: postgres
+  postgres_port: "5432"

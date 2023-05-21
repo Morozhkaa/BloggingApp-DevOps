@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: comment-configmap
+data:
+  http_port: "9090"
+  is_prod: "false"
+  #db_url: postgres://postgres:qwerty@post-db-service:5432/post?sslmode=disable
+  #db_url: postgres://oshishkina:iohs3o94fFhopR-954@91.185.86.92:5432/post?sslmode=disable
+  db_url: postgres://${DB_USER}:${DB_PASS}@${DB_HOST}:${DB_PORT}/post?sslmode=disable
+  auth_url: http://auth-service:3030/

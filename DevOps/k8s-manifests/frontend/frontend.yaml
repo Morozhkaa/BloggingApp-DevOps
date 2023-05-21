@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-deployment
+  labels:
+    app: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - name: frontend
+        image: registry.gitlab.com/teta-students/hse_shishkina/core/frontend:${IMAGE_VERSION}
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 3000
+        env:
+        - name: REACT_APP_authURL
+          valueFrom:
+            configMapKeyRef:
+              name: frontend-configmap
+              key: authURL
+        - name: REACT_APP_postURL
+          valueFrom:
+            configMapKeyRef:
+              name: frontend-configmap
+              key: postURL
+        - name: REACT_APP_commentURL
+          valueFrom:
+            configMapKeyRef:
+              name: frontend-configmap
+              key: commentURL
+        - name: REACT_APP_chatURL
+          valueFrom:
+            configMapKeyRef:
+              name: frontend-configmap
+              key: chatURL
+      imagePullSecrets: 
+      - name: frontend-gitlab-pull-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+spec:
+  selector:
+    app: frontend
+  ports:
+    - port: 3000

@@ -1,0 +1,12 @@
+container_port: "9000"
+container_replicaCount: 1
+container_image: post:1
+container_env:
+  - name: DB_URL
+    value: postgres://postgres:qwerty@post-db-service:5432/post?sslmode=disable
+  - name: AUTH_URL
+    value: http://auth-service.hse-app:3030/
+  # - name: HTTP_PORT
+  #   value: "9000"
+  # - name: IS_PROD
+  #   value: "false"

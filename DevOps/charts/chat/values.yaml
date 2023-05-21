@@ -1,0 +1,3 @@
+container_port: "8080"
+container_replicaCount: 1
+container_image: chat:1

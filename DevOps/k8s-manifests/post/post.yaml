@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: post-deployment
+  labels:
+    app: post
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: post
+  template:
+    metadata:
+      labels:
+        app: post
+    spec:
+      containers:
+      - name: post
+        image: registry.gitlab.com/teta-students/hse_shishkina/core/post-service:${IMAGE_VERSION}
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 9000
+        env:
+        - name: HTTP_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: post-configmap
+              key: http_port
+        - name: IS_PROD
+          valueFrom:
+            configMapKeyRef:
+              name: post-configmap
+              key: is_prod
+        - name: DB_URL
+          valueFrom:
+            configMapKeyRef:
+              name: post-configmap
+              key: db_url
+        - name: AUTH_URL
+          valueFrom:
+            configMapKeyRef:
+              name: post-configmap
+              key: auth_url
+      imagePullSecrets: 
+      - name: post-gitlab-pull-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: post-service
+spec:
+  selector:
+    app: post
+  ports:
+    - protocol: TCP
+      port: 9000
+      targetPort: 9000
