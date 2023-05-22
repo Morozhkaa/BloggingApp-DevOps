@@ -8,7 +8,7 @@ services:
   auth:
     image: auth:1
     build:
-      context: .
+      context: ../../Core/auth-service
       dockerfile: Dockerfile
     ports:
       - 3030:3030
@@ -26,7 +26,7 @@ services:
   auth-db:
     image: postgres:15.1
     volumes:
-      - ./internal/adapters/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./db-initialization/auth-db-init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - 5432:5432
     environment:
@@ -38,7 +38,7 @@ services:
   chat:
     image: chat:1
     build:
-      context: ../chat-service
+      context: ../../Core/chat-service
       dockerfile: Dockerfile
     ports:
       - 8080:8080
@@ -47,7 +47,7 @@ services:
   post:
     image: post:1
     build:
-      context: ../post-service
+      context: ../../Core/post-service
       dockerfile: Dockerfile
     ports:
       - 9000:9000
@@ -64,7 +64,7 @@ services:
   post-db:
     image: postgres:15.1
     volumes:
-      - ./internal/adapters/db/db-post/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./db-initialization/post-db-init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - 5431:5432
     environment:
@@ -76,7 +76,7 @@ services:
   comment:
     image: comment:1
     build:
-      context: ../comms-service
+      context: ../../Core/comms-service
       dockerfile: Dockerfile
     ports:
       - 9090:9090
@@ -93,7 +93,7 @@ services:
   frontend:
     image: frontend:1
     build:
-      context: ../frontend
+      context: ../../Core/frontend
       dockerfile: Dockerfile
     ports:
       - '3000:3000'
