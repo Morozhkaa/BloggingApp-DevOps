@@ -16,9 +16,9 @@
 
 ### Usage
 
-1. Поскольку приложение развернуто в кластере Kubernetes, им можно легко воспользоваться перейдя по ссылке: http://sakurablog.ru/
+Приложение было доступно по ссылке: http://sakurablog.ru/, но сейчас выделенный кластер больше недоступен. 
 
-2. Для **локального использования** необходимо:
+Для **локального использования** необходимо:
 
 * Склонировать проект с помощью команды: 
     
@@ -53,5 +53,7 @@ docker-compose -f ./docker-compose.yml up -d --build
 <img src="https://github.com/Morozhkaa/Project-DevOps/blob/main/images/overview.gif" width="600">
 </p>
 
+Больше фото по ___[ссылке](https://drive.google.com/drive/folders/1SBlh0gvj49v4e2U3vSL07NWXQTq_lffb?usp=sharing)___.
 
-Более подробный видео-обзор по ___[ссылке](https://drive.google.com/file/d/1CTA_u72i51S_jvFc6jvuYvYN2yVwY7uR/view?usp=share_link)___
+
+Более подробный видео-обзор по ___[ссылке](https://drive.google.com/file/d/1CTA_u72i51S_jvFc6jvuYvYN2yVwY7uR/view?usp=share_link)___.
